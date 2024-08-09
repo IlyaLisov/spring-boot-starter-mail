@@ -7,7 +7,7 @@ import lombok.Getter;
 @Builder
 @AllArgsConstructor
 @Getter
-public class PlainMailConfig implements MailConfig {
+public class PlainMailConfiguration implements MailConfiguration {
 
     /**
      * Subject of email.

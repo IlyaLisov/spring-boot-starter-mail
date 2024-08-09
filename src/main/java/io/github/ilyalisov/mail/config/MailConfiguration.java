@@ -1,6 +1,6 @@
 package io.github.ilyalisov.mail.config;
 
-public interface MailConfig {
+public interface MailConfiguration {
 
     /**
      * Returns HTML template file name for email.

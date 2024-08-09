@@ -102,24 +102,24 @@ public class MailConfig {
      * @return map of templates
      */
     @Bean
-    public Map<MailType, MailConfig> templates() {
-        Map<MailType, MailConfig> templates = new HashMap<>();
+    public Map<MailType, MailConfiguration> templates() {
+        Map<MailType, MailConfiguration> templates = new HashMap<>();
         templates.put(
                 MailType.REGISTRATION,
-                new TemplateMailConfig(
+                new TemplateMailConfiguration(
                         "registration.ftlh",
                         "Registration"
                 )
         );
         templates.put(
                 MailType.PASSWORD_RESET,
-                new PlainMailConfig(
+                new PlainMailConfiguration(
                         "Password Reset"
                 )
         );
         templates.put(
                 MailType.NEWSLETTER,
-                new TemplateMailConfig(
+                new TemplateMailConfiguration(
                         "news.ftlh",
                         "Newsletter"
                 )
@@ -129,7 +129,7 @@ public class MailConfig {
 
     @Bean
     public MailService defaultMailService() {
-        Map<MailType, MailConfig> templates = templates();
+        Map<MailType, MailConfiguration> templates = templates();
         return new MailServiceImpl(
                 configuration,
                 javaMailSender,
@@ -184,24 +184,24 @@ public class GoogleMailConfig {
      * @return map of templates
      */
     @Bean
-    public Map<MailType, MailConfig> templates() {
-        Map<MailType, MailConfig> templates = new HashMap<>();
+    public Map<MailType, MailConfiguration> templates() {
+        Map<MailType, MailConfiguration> templates = new HashMap<>();
         templates.put(
                 MailType.REGISTRATION,
-                new TemplateMailConfig(
+                new TemplateMailConfiguration(
                         "registration.ftlh",
                         "Registration"
                 )
         );
         templates.put(
                 MailType.PASSWORD_RESET,
-                new PlainMailConfig(
+                new PlainMailConfiguration(
                         "Password Reset"
                 )
         );
         templates.put(
                 MailType.NEWSLETTER,
-                new TemplateMailConfig(
+                new TemplateMailConfiguration(
                         "news.ftlh",
                         "Newsletter"
                 )
@@ -211,7 +211,7 @@ public class GoogleMailConfig {
 
     @Bean
     public MailService googleMailService() {
-        Map<MailType, MailConfig> templates = templates();
+        Map<MailType, MailConfiguration> templates = templates();
         return new GoogleMailServiceImpl(
                 username,
                 password,
@@ -267,24 +267,24 @@ public class GoogleMailConfig {
      * @return map of templates
      */
     @Bean
-    public Map<MailType, MailConfig> templates() {
-        Map<MailType, MailConfig> templates = new HashMap<>();
+    public Map<MailType, MailConfiguration> templates() {
+        Map<MailType, MailConfiguration> templates = new HashMap<>();
         templates.put(
                 MailType.REGISTRATION,
-                new TemplateMailConfig(
+                new TemplateMailConfiguration(
                         "registration.ftlh",
                         "Registration"
                 )
         );
         templates.put(
                 MailType.PASSWORD_RESET,
-                new PlainMailConfig(
+                new PlainMailConfiguration(
                         "Password Reset"
                 )
         );
         templates.put(
                 MailType.NEWSLETTER,
-                new TemplateMailConfig(
+                new TemplateMailConfiguration(
                         "news.ftlh",
                         "Newsletter"
                 )
@@ -294,7 +294,7 @@ public class GoogleMailConfig {
 
     @Bean
     public MailService mailRuMailService() {
-        Map<MailType, MailConfig> templates = templates();
+        Map<MailType, MailConfiguration> templates = templates();
         return new MailRuMailServiceImpl(
                 username,
                 password,
