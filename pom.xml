@@ -30,16 +30,14 @@
         <url>https://github.com/ilyalisov/spring-boot-starter-mail/actions</url>
     </ciManagement>
     <scm>
-        <connection>scm:git:git://github.com/ilyalisov/spring-boot-starter-mail.git</connection>
-        <developerConnection>scm:git:ssh://github.com:ilyalisov/spring-boot-starter-mail.git</developerConnection>
+        <connection>
+            scm:git:git://github.com/ilyalisov/spring-boot-starter-mail.git
+        </connection>
+        <developerConnection>
+            scm:git:ssh://github.com:ilyalisov/spring-boot-starter-mail.git
+        </developerConnection>
         <url>https://github.com/ilyalisov/spring-boot-starter-mail</url>
     </scm>
-    <parent>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.3.1</version>
-        <relativePath/>
-    </parent>
     <properties>
         <java.version>17</java.version>
         <maven.compiler.source>17</maven.compiler.source>
@@ -47,21 +45,29 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <lombok.version>1.18.30</lombok.version>
         <checkstyle.version>3.3.1</checkstyle.version>
+        <spring-boot.version>3.3.1</spring-boot.version>
     </properties>
     <dependencies>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter</artifactId>
+            <version>${spring-boot.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-mail</artifactId>
+            <version>${spring-boot.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-freemarker</artifactId>
+            <version>${spring-boot.version}</version>
+        </dependency>
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <optional>true</optional>
             <version>${lombok.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-mail</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-freemarker</artifactId>
         </dependency>
     </dependencies>
     <build>
@@ -89,8 +95,10 @@
                             <goal>check</goal>
                         </goals>
                         <configuration>
-                            <suppressionsFileExpression>suppressions.xml</suppressionsFileExpression>
-                            <suppressionsLocation>suppressions.xml</suppressionsLocation>
+                            <suppressionsFileExpression>suppressions.xml
+                            </suppressionsFileExpression>
+                            <suppressionsLocation>suppressions.xml
+                            </suppressionsLocation>
                         </configuration>
                     </execution>
                 </executions>
@@ -109,11 +117,15 @@
             <distributionManagement>
                 <snapshotRepository>
                     <id>ossrh</id>
-                    <url>https://s01.oss.sonatype.org/content/repositories/snapshots</url>
+                    <url>
+                        https://s01.oss.sonatype.org/content/repositories/snapshots
+                    </url>
                 </snapshotRepository>
                 <repository>
                     <id>ossrh</id>
-                    <url>https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+                    <url>
+                        https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/
+                    </url>
                 </repository>
             </distributionManagement>
             <build>

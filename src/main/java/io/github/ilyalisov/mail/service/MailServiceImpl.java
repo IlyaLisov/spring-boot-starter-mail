@@ -1,7 +1,7 @@
-package service;
+package io.github.ilyalisov.mail.service;
 
-import config.MailTemplateConfig;
-import config.MailParameters;
+import io.github.ilyalisov.mail.config.MailParameters;
+import io.github.ilyalisov.mail.config.MailConfiguration;
 import freemarker.template.Configuration;
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
@@ -16,16 +16,27 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class MailServiceImpl<T> implements MailService<T> {
 
+    /**
+     * Freemarker configuration.
+     */
     private final Configuration configuration;
+
+    /**
+     * JavaMailSender object.
+     */
     private final JavaMailSenderImpl sender;
-    private final Map<T, MailTemplateConfig> templates;
+
+    /**
+     * Map of templates.
+     */
+    private final Map<T, MailConfiguration> templates;
 
     @Override
     @SneakyThrows
     public void send(
             final MailParameters<T> params
     ) {
-        MailTemplateConfig template = getTemplate(params);
+        MailConfiguration template = getTemplate(params);
         String content = getContent(
                 params,
                 template
@@ -44,7 +55,7 @@ public class MailServiceImpl<T> implements MailService<T> {
             final MailParameters<T> params,
             final String subject
     ) {
-        MailTemplateConfig template = getTemplate(params);
+        MailConfiguration template = getTemplate(params);
         String content = getContent(
                 params,
                 template
@@ -57,21 +68,26 @@ public class MailServiceImpl<T> implements MailService<T> {
         );
     }
 
-    private MailTemplateConfig getTemplate(
-            MailParameters<T> params
+    private MailConfiguration getTemplate(
+            final MailParameters<T> params
     ) {
-        MailTemplateConfig template = templates.get(params.getType());
+        MailConfiguration template = templates.get(params.getType());
         if (template == null) {
             throw new IllegalStateException(
                     "No template found for type: " + params.getType()
+            );
+        }
+        if (!template.isHtml() && params.getText() == null) {
+            throw new IllegalStateException(
+                    "No text provided for plain type: " + params.getType()
             );
         }
         return template;
     }
 
     private String getContent(
-            MailParameters<T> params,
-            MailTemplateConfig template
+            final MailParameters<T> params,
+            final MailConfiguration template
     ) {
         String content;
         if (template.isHtml()) {
@@ -86,10 +102,10 @@ public class MailServiceImpl<T> implements MailService<T> {
     }
 
     private void sendEmail(
-            MailParameters<T> params,
-            String content,
-            boolean isHtml,
-            String subject
+            final MailParameters<T> params,
+            final String content,
+            final boolean isHtml,
+            final String subject
     ) {
         for (String receiver : params.getReceivers()) {
             try {
@@ -113,7 +129,7 @@ public class MailServiceImpl<T> implements MailService<T> {
     @SneakyThrows
     private String processTemplate(
             final MailParameters<T> params,
-            final MailTemplateConfig template
+            final MailConfiguration template
     ) {
         StringWriter stringWriter = new StringWriter();
         Map<String, Object> model = new HashMap<>();
@@ -124,7 +140,7 @@ public class MailServiceImpl<T> implements MailService<T> {
                     String.valueOf(entry.getValue())
             );
         }
-        configuration.getTemplate(template.getTemplate())
+        configuration.getTemplate(template.getTemplateFileName())
                 .process(model, stringWriter);
         return stringWriter.getBuffer()
                 .toString();
