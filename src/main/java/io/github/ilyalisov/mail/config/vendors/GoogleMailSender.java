@@ -1,15 +1,15 @@
-package config.vendors;
+package io.github.ilyalisov.mail.config.vendors;
 
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 
 import java.util.Properties;
 
-public class MailRuMailSender extends JavaMailSenderImpl {
+public class GoogleMailSender extends JavaMailSenderImpl {
 
     /**
-     * Default host of Mail.ru mail server.
+     * Default host of Gmail mail server.
      */
-    private static final String HOST = "smtp.mail.ru";
+    private static final String HOST = "smtp.gmail.com";
 
     /**
      * Creates and object.
@@ -17,7 +17,7 @@ public class MailRuMailSender extends JavaMailSenderImpl {
      * @param username username of mail account
      * @param password password of mail account. Often a token for apps
      */
-    public MailRuMailSender(
+    public GoogleMailSender(
             final String username,
             final String password
     ) {
@@ -25,14 +25,10 @@ public class MailRuMailSender extends JavaMailSenderImpl {
         props.put("mail.debug", false);
         props.put("mail.transport.protocol", "smtp");
         props.put("mail.smtp.auth", true);
-        props.put("mail.smtp.host", HOST);
-        props.put("mail.smtp.ssl.protocols", "TLSv1.2");
-        props.put("mail.smtp.ssl.enable", true);
-        props.put("mail.smtp.ssl.trust", HOST);
-        props.put("mail.smtp.starttls.enable", false);
+        props.put("mail.smtp.starttls.enable", true);
 
         this.setHost(HOST);
-        this.setPort(465);
+        this.setPort(587);
         this.setUsername(username);
         this.setPassword(password);
         this.setJavaMailProperties(props);

@@ -102,25 +102,24 @@ public class MailConfig {
      * @return map of templates
      */
     @Bean
-    public Map<MailType, MailTemplateConfig> templates() {
-        Map<MailType, MailTemplateConfig> templates = new HashMap<>();
+    public Map<MailType, MailConfig> templates() {
+        Map<MailType, MailConfig> templates = new HashMap<>();
         templates.put(
                 MailType.REGISTRATION,
-                new MailTemplateConfig(
+                new TemplateMailConfig(
                         "registration.ftlh",
-                        "Registration",
-                        true
+                        "Registration"
                 )
         );
         templates.put(
                 MailType.PASSWORD_RESET,
-                new MailTemplateConfig(
+                new PlainMailConfig(
                         "Password Reset"
                 )
         );
         templates.put(
                 MailType.NEWSLETTER,
-                new MailTemplateConfig(
+                new TemplateMailConfig(
                         "news.ftlh",
                         "Newsletter"
                 )
@@ -130,7 +129,7 @@ public class MailConfig {
 
     @Bean
     public MailService defaultMailService() {
-        Map<MailType, MailTemplateConfig> templates = templates();
+        Map<MailType, MailConfig> templates = templates();
         return new MailServiceImpl(
                 configuration,
                 javaMailSender,
@@ -185,25 +184,24 @@ public class GoogleMailConfig {
      * @return map of templates
      */
     @Bean
-    public Map<MailType, MailTemplateConfig> templates() {
-        Map<MailType, MailTemplateConfig> templates = new HashMap<>();
+    public Map<MailType, MailConfig> templates() {
+        Map<MailType, MailConfig> templates = new HashMap<>();
         templates.put(
                 MailType.REGISTRATION,
-                new MailTemplateConfig(
+                new TemplateMailConfig(
                         "registration.ftlh",
-                        "Registration",
-                        true
+                        "Registration"
                 )
         );
         templates.put(
                 MailType.PASSWORD_RESET,
-                new MailTemplateConfig(
+                new PlainMailConfig(
                         "Password Reset"
                 )
         );
         templates.put(
                 MailType.NEWSLETTER,
-                new MailTemplateConfig(
+                new TemplateMailConfig(
                         "news.ftlh",
                         "Newsletter"
                 )
@@ -213,7 +211,7 @@ public class GoogleMailConfig {
 
     @Bean
     public MailService googleMailService() {
-        Map<MailType, MailTemplateConfig> templates = templates();
+        Map<MailType, MailConfig> templates = templates();
         return new GoogleMailServiceImpl(
                 username,
                 password,
@@ -269,25 +267,24 @@ public class GoogleMailConfig {
      * @return map of templates
      */
     @Bean
-    public Map<MailType, MailTemplateConfig> templates() {
-        Map<MailType, MailTemplateConfig> templates = new HashMap<>();
+    public Map<MailType, MailConfig> templates() {
+        Map<MailType, MailConfig> templates = new HashMap<>();
         templates.put(
                 MailType.REGISTRATION,
-                new MailTemplateConfig(
+                new TemplateMailConfig(
                         "registration.ftlh",
-                        "Registration",
-                        true
+                        "Registration"
                 )
         );
         templates.put(
                 MailType.PASSWORD_RESET,
-                new MailTemplateConfig(
+                new PlainMailConfig(
                         "Password Reset"
                 )
         );
         templates.put(
                 MailType.NEWSLETTER,
-                new MailTemplateConfig(
+                new TemplateMailConfig(
                         "news.ftlh",
                         "Newsletter"
                 )
@@ -297,8 +294,8 @@ public class GoogleMailConfig {
 
     @Bean
     public MailService mailRuMailService() {
-        Map<MailType, MailTemplateConfig> templates = templates();
-        return new MailRueMailServiceImpl(
+        Map<MailType, MailConfig> templates = templates();
+        return new MailRuMailServiceImpl(
                 username,
                 password,
                 configuration,
@@ -343,7 +340,7 @@ public class SomeService {
 
 We recommend to use `@Async` annotation on your service methods, that send
 emails. This will make your application faster. Average time of sending email
-is about 3-5 second.
+is about 5-10 second.
 
 You can also provide custom subject.
 
@@ -417,7 +414,7 @@ each of them. It is convenient to send same emails to many people.
 
 We recommend to use `@Async` annotation on your service methods, that send
 emails. This will make your application faster. Average time of sending email
-is about 3-5 second.
+is about 5-10 second.
 
 You can also provide custom subject.
 

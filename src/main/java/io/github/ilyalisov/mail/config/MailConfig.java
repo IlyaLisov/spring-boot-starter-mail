@@ -1,11 +1,11 @@
-package config;
+package io.github.ilyalisov.mail.config;
 
-public interface MailTemplateConfig {
+public interface MailConfig {
 
     /**
      * Returns HTML template file name for email.
      *
-     * @return HTML template file name to be populated
+     * @return HTML template file name to be populated or null if it is plain
      */
     String getTemplateFileName();
 
@@ -20,7 +20,7 @@ public interface MailTemplateConfig {
     /**
      * Returns true if email is in HTML format.
      *
-     * @return true if email is in HTML format
+     * @return true if email is in HTML format, false is plain
      */
     boolean isHtml();
 

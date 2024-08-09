@@ -1,4 +1,4 @@
-package config;
+package io.github.ilyalisov.mail.config;
 
 import lombok.AccessLevel;
 import lombok.Builder;
