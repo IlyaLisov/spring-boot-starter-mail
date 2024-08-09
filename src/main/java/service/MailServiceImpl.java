@@ -1,7 +1,7 @@
 package service;
 
-import config.MailTemplateConfig;
 import config.MailParameters;
+import config.MailTemplateConfig;
 import freemarker.template.Configuration;
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
@@ -16,8 +16,19 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class MailServiceImpl<T> implements MailService<T> {
 
+    /**
+     * Freemarker configuration.
+     */
     private final Configuration configuration;
+
+    /**
+     * JavaMailSender object.
+     */
     private final JavaMailSenderImpl sender;
+
+    /**
+     * Map of templates.
+     */
     private final Map<T, MailTemplateConfig> templates;
 
     @Override
@@ -58,7 +69,7 @@ public class MailServiceImpl<T> implements MailService<T> {
     }
 
     private MailTemplateConfig getTemplate(
-            MailParameters<T> params
+            final MailParameters<T> params
     ) {
         MailTemplateConfig template = templates.get(params.getType());
         if (template == null) {
@@ -70,8 +81,8 @@ public class MailServiceImpl<T> implements MailService<T> {
     }
 
     private String getContent(
-            MailParameters<T> params,
-            MailTemplateConfig template
+            final MailParameters<T> params,
+            final MailTemplateConfig template
     ) {
         String content;
         if (template.isHtml()) {
@@ -86,10 +97,10 @@ public class MailServiceImpl<T> implements MailService<T> {
     }
 
     private void sendEmail(
-            MailParameters<T> params,
-            String content,
-            boolean isHtml,
-            String subject
+            final MailParameters<T> params,
+            final String content,
+            final boolean isHtml,
+            final String subject
     ) {
         for (String receiver : params.getReceivers()) {
             try {
@@ -124,7 +135,7 @@ public class MailServiceImpl<T> implements MailService<T> {
                     String.valueOf(entry.getValue())
             );
         }
-        configuration.getTemplate(template.getTemplate())
+        configuration.getTemplate(template.getTemplateFileName())
                 .process(model, stringWriter);
         return stringWriter.getBuffer()
                 .toString();

@@ -11,11 +11,34 @@ import java.util.Properties;
 @Getter
 public class MailParameters<T> {
 
+    /**
+     * Type of email. It is used to determine the template of the email.
+     */
     private T type;
+
+    /**
+     * List of email receivers.
+     */
     private List<String> receivers;
+
+    /**
+     * Text of email. It is used if email is not an HTML template.
+     */
     private String text;
+
+    /**
+     * Properties for populating template.
+     */
     private Properties properties;
 
+    /**
+     * Builder with one receiver.
+     *
+     * @param receiver email of receiver
+     * @param type     type of email
+     * @param <T>      type of email
+     * @return builder
+     */
     public static <T> MailParametersBuilder<T> builder(
             final String receiver,
             final T type
@@ -23,9 +46,17 @@ public class MailParameters<T> {
         return new MailParametersBuilder<T>()
                 .properties(new Properties())
                 .type(type)
-                .receiver(receiver);
+                .receivers(List.of(receiver));
     }
 
+    /**
+     * Builder with one receiver.
+     *
+     * @param receivers emails of receivers
+     * @param type      type of email
+     * @param <T>       type of email
+     * @return builder
+     */
     public static <T> MailParametersBuilder<T> builder(
             final List<String> receivers,
             final T type
@@ -38,17 +69,27 @@ public class MailParameters<T> {
 
     public static class MailParametersBuilder<T> {
 
+        /**
+         * Setter for property.
+         *
+         * @param key   key
+         * @param value value
+         * @return builder
+         */
         public MailParametersBuilder<T> property(
                 final String key,
                 final String value
         ) {
-            if (this.properties == null) {
-                this.properties = new Properties();
-            }
             this.properties.put(key, value);
             return this;
         }
 
+        /**
+         * Setter for properties.
+         *
+         * @param properties properties
+         * @return builder
+         */
         public MailParametersBuilder<T> properties(
                 final Properties properties
         ) {
@@ -59,13 +100,12 @@ public class MailParameters<T> {
             return this;
         }
 
-        public MailParametersBuilder<T> receiver(
-                final String receiver
-        ) {
-            this.receivers = List.of(receiver);
-            return this;
-        }
-
+        /**
+         * Setter for text.
+         *
+         * @param text text
+         * @return builder
+         */
         public MailParametersBuilder<T> text(
                 final String text
         ) {
@@ -73,6 +113,11 @@ public class MailParameters<T> {
             return this;
         }
 
+        /**
+         * Actual builder.
+         *
+         * @return built object
+         */
         public MailParameters<T> build() {
             return new MailParameters<>(
                     type,

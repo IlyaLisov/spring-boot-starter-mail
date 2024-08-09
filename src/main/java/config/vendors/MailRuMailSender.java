@@ -6,8 +6,17 @@ import java.util.Properties;
 
 public class MailRuMailSender extends JavaMailSenderImpl {
 
+    /**
+     * Default host of Mail.ru mail server.
+     */
     private static final String HOST = "smtp.mail.ru";
 
+    /**
+     * Creates and object.
+     *
+     * @param username username of mail account
+     * @param password password of mail account. Often a token for apps
+     */
     public MailRuMailSender(
             final String username,
             final String password
