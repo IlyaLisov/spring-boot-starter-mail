@@ -1,6 +1,6 @@
-package service;
+package io.github.ilyalisov.mail.service;
 
-import config.MailParameters;
+import io.github.ilyalisov.mail.config.MailParameters;
 
 public interface MailService<T> {
 

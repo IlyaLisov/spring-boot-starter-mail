@@ -1,7 +1,7 @@
-package service;
+package io.github.ilyalisov.mail.service;
 
-import config.MailTemplateConfig;
-import config.vendors.MailRuMailSender;
+import io.github.ilyalisov.mail.config.MailConfiguration;
+import io.github.ilyalisov.mail.config.vendors.MailRuMailSender;
 import freemarker.template.Configuration;
 
 import java.util.Map;
@@ -20,7 +20,7 @@ public class MailRuMailServiceImpl<T> extends MailServiceImpl<T> {
             final String username,
             final String password,
             final Configuration configuration,
-            final Map<T, MailTemplateConfig> templates
+            final Map<T, MailConfiguration> templates
     ) {
         super(
                 configuration,
