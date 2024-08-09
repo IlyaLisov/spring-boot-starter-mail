@@ -1,10 +1,10 @@
 # Spring Boot Starter Mail
 
-[![Lines-of-Code](https://tokei.rs/b1/github/ilyalisov/spring-boot-starter-mail)](https://github.com/ilyalisov/jwt)
-[![Hits-of-Code](https://hitsofcode.com/github/ilyalisov/spring-boot-starter-mail?branch=master)](https://hitsofcode.com/github/ilyalisov/jwt/view?branch=master)
-[![mvn](https://github.com/ilyalisov/spring-boot-starter-mail/actions/workflows/maven-build.yml/badge.svg)](https://github.com/ilyalisov/jwt/actions/workflows/maven-build.yml)
+[![Lines-of-Code](https://tokei.rs/b1/github/ilyalisov/spring-boot-starter-mail)](https://github.com/ilyalisov/spring-boot-starter-mail)
+[![Hits-of-Code](https://hitsofcode.com/github/ilyalisov/spring-boot-starter-mail?branch=master)](https://hitsofcode.com/github/ilyalisov/spring-boot-starter-mail/view?branch=master)
+[![mvn](https://github.com/ilyalisov/spring-boot-starter-mail/actions/workflows/maven-build.yml/badge.svg)](https://github.com/ilyalisov/spring-boot-starter-mail/actions/workflows/maven-build.yml)
 
-[![codecov](https://codecov.io/gh/IlyaLisov/spring-boot-starter-mail/graph/badge.svg?token=OJR6TFQ2qr)](https://codecov.io/gh/IlyaLisov/jwt)
+[![codecov](https://codecov.io/gh/IlyaLisov/spring-boot-starter-mail/graph/badge.svg?token=OJR6TFQ2qr)](https://codecov.io/gh/IlyaLisov/spring-boot-starter-mail)
 
 This repository is an open-source Java library for fast and convenient using of
 MailSender in your Spring Boot applications.
