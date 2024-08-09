@@ -539,6 +539,7 @@ This template has some variables:
 * `title` - title of the notification
 * `text` - text of the notification. We use `?no_esc` to prevent escaping of
   HTML tags, so you can use HTML tags in your email body
+* `buttonOpenText` - text of the button
 
 ## How to contribute
 
