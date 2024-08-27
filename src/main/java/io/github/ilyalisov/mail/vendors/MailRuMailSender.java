@@ -1,4 +1,4 @@
-package io.github.ilyalisov.mail.config.vendors;
+package io.github.ilyalisov.mail.vendors;
 
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 
