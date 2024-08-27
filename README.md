@@ -14,9 +14,6 @@ MailSender in your Spring Boot applications.
 * [How to use](#how-to-use)
     * [Prerequisites](#prerequisites)
     * [Instantiate a service](#instantiate-a-service)
-        * [MailServiceImpl](#mailserviceimpl)
-        * [GoogleMailService](#googlemailservice)
-        * [MailRuMailService](#mailrumailservice)
     * [Send email](#send-email)
     * [Send email to many people](#send-email-to-many-people)
     * [Templates](#templates)
@@ -33,7 +30,7 @@ With Maven add dependency to your `pom.xml`.
 <dependency>
     <groupId>io.github.ilyalisov</groupId>
     <artifactId>spring-boot-starter-mail</artifactId>
-    <version>0.1.0</version>
+    <version>0.2.0</version>
 </dependency>
 ```
 
@@ -41,7 +38,7 @@ This library provides simple and convenient usage.
 
 ### Prerequisites
 
-You need to use some Objects to define email types. We suggest to use enums.
+You need to use some strings to define email types. We suggest to use enums.
 This is concise and clear way to define email types.
 
 ```java
@@ -60,254 +57,58 @@ is default directory for email templates.
 We have 3 implementations of `MailService` interface. We recommend to use it as
 beans and do not instantiate it by itself.
 
-We work on implementing more convenient ways to use this library.
+This library provide starter for `MailService` interface. You can use it in your
+Spring Boot application and configure via `application.properties` or
+`application.yml` file.
 
-#### MailServiceImpl
-
-This is default implementation, where you need to provide your own mail server
-settings.
-
-You need to have `application.properties` or `application.yml` file in your
-
-```java
-
-@Configuration
-@RequiredArgsConstructor
-public class MailConfig {
-
-    /**
-     * This is a FreeMarker configuration.
-     */
-    private final Configuration configuration;
-
-    /**
-     * This is a JavaMailSender.
-     */
-    private final JavaMailSender javaMailSender;
-
-    /**
-     * This bean creates a map of mail templates for each type.
-     *
-     * REGISTRATION mail template is an HTML template, has subject and its
-     * freemarker template is located
-     * in src/main/resources/templates/registration.ftlh
-     *
-     * PASSWORD_RESET mail template is not an HTML template, has subject and
-     * service will use provided text as email body
-     *
-     * NEWSLETTER mail template is an HTML template, has subject and its
-     * freemarker template is located
-     * in src/main/resources/templates/news.ftlh
-     *
-     * @return map of templates
-     */
-    @Bean
-    public Map<MailType, MailConfiguration> templates() {
-        Map<MailType, MailConfiguration> templates = new HashMap<>();
-        templates.put(
-                MailType.REGISTRATION,
-                new TemplateMailConfiguration(
-                        "registration.ftlh",
-                        "Registration"
-                )
-        );
-        templates.put(
-                MailType.PASSWORD_RESET,
-                new PlainMailConfiguration(
-                        "Password Reset"
-                )
-        );
-        templates.put(
-                MailType.NEWSLETTER,
-                new TemplateMailConfiguration(
-                        "news.ftlh",
-                        "Newsletter"
-                )
-        );
-        return templates;
-    }
-
-    @Bean
-    public MailService defaultMailService() {
-        Map<MailType, MailConfiguration> templates = templates();
-        return new MailServiceImpl(
-                configuration,
-                javaMailSender,
-                templates
-        );
-    }
-}
+```yaml
+spring:
+  mail:
+    username: mailaccount@gmail.com
+    password: somepasword
+    vendor: gmail.com
+    templates:
+      - type: REGISTRATION
+        defaultSubject: "Thanks for registration!"
+        template: "registration.ftlh"
+        properties:
+          somePropertyInTemplate: someValueOfProperty
+      - type: PASSWORD_RESET
+        defaultSubject: "Password reset"
+        template: "reset.ftlh"
+      - type: NEWSLETTER
+        defaultSubject: "Newsletter"
 ```
 
-#### GoogleMailService
+You can use `vendor` property to define mail vendor. This property is optional.
 
-For some mail vendors we have predefined implementations. For example, for
-Google Mail we have `GoogleMailService`.
+Now we support 2 mail vendors:
 
-```java
+* `gmail.com` - Google Mail
+* `mail.ru` - Mail.Ru Mail
 
-@Configuration
-@RequiredArgsConstructor
-public class GoogleMailConfig {
+If you do not provide it, service will use default implementation and
+provided `spring.mail` properties.
 
-    /**
-     * This is a FreeMarker configuration.
-     */
-    private final Configuration configuration;
+You can use `templates` property to define email templates. You need to provide
+`type` property to define email type. This is required property.
 
-    /**
-     * This is a mail account username.
-     */
-    @Value("${spring.mail.username}")
-    private String username;
+You can use `defaultSubject` property to define default subject of email. This
+is required property. Default subject can be overridden in `MailParameters`
+builder.
 
-    /**
-     * This is a mail account token.
-     */
-    @Value("${spring.mail.password}")
-    private String password;
+You can use `template` property to define template file. This is optional
+property. If you do not provide it, no template will be used and email would be
+just plain text.
 
-    /**
-     * This bean creates a map of mail templates for each type.
-     *
-     * REGISTRATION mail template is an HTML template, has subject and its
-     * freemarker template is located
-     * in src/main/resources/templates/registration.ftlh
-     *
-     * PASSWORD_RESET mail template is not an HTML template, has subject and
-     * service will use provided text as email body
-     *
-     * NEWSLETTER mail template is an HTML template, has subject and its
-     * freemarker template is located
-     * in src/main/resources/templates/news.ftlh
-     *
-     * @return map of templates
-     */
-    @Bean
-    public Map<MailType, MailConfiguration> templates() {
-        Map<MailType, MailConfiguration> templates = new HashMap<>();
-        templates.put(
-                MailType.REGISTRATION,
-                new TemplateMailConfiguration(
-                        "registration.ftlh",
-                        "Registration"
-                )
-        );
-        templates.put(
-                MailType.PASSWORD_RESET,
-                new PlainMailConfiguration(
-                        "Password Reset"
-                )
-        );
-        templates.put(
-                MailType.NEWSLETTER,
-                new TemplateMailConfiguration(
-                        "news.ftlh",
-                        "Newsletter"
-                )
-        );
-        return templates;
-    }
-
-    @Bean
-    public MailService googleMailService() {
-        Map<MailType, MailConfiguration> templates = templates();
-        return new GoogleMailServiceImpl(
-                username,
-                password,
-                configuration,
-                templates
-        );
-    }
-}
-```
-
-#### MailRuMailService
-
-For some mail vendors we have predefined implementations. For example, for
-MailRu Mail we have `MailRuMailService`.
-
-```java
-
-@Configuration
-@RequiredArgsConstructor
-public class GoogleMailConfig {
-
-    /**
-     * This is a FreeMarker configuration.
-     */
-    private final Configuration configuration;
-
-    /**
-     * This is a mail account username.
-     */
-    @Value("${spring.mail.username}")
-    private String username;
-
-    /**
-     * This is a mail account token.
-     */
-    @Value("${spring.mail.password}")
-    private String password;
-
-    /**
-     * This bean creates a map of mail templates for each type.
-     *
-     * REGISTRATION mail template is an HTML template, has subject and its
-     * freemarker template is located
-     * in src/main/resources/templates/registration.ftlh
-     *
-     * PASSWORD_RESET mail template is not an HTML template, has subject and
-     * service will use provided text as email body
-     *
-     * NEWSLETTER mail template is an HTML template, has subject and its
-     * freemarker template is located
-     * in src/main/resources/templates/news.ftlh
-     *
-     * @return map of templates
-     */
-    @Bean
-    public Map<MailType, MailConfiguration> templates() {
-        Map<MailType, MailConfiguration> templates = new HashMap<>();
-        templates.put(
-                MailType.REGISTRATION,
-                new TemplateMailConfiguration(
-                        "registration.ftlh",
-                        "Registration"
-                )
-        );
-        templates.put(
-                MailType.PASSWORD_RESET,
-                new PlainMailConfiguration(
-                        "Password Reset"
-                )
-        );
-        templates.put(
-                MailType.NEWSLETTER,
-                new TemplateMailConfiguration(
-                        "news.ftlh",
-                        "Newsletter"
-                )
-        );
-        return templates;
-    }
-
-    @Bean
-    public MailService mailRuMailService() {
-        Map<MailType, MailConfiguration> templates = templates();
-        return new MailRuMailServiceImpl(
-                username,
-                password,
-                configuration,
-                templates
-        );
-    }
-}
-```
+After startup, service will load all templates from `templates` directory and
+store them in memory. You can use `MailService` bean in your services.
 
 ### Send email
 
-When you define your `MailService` bean, you can use it in your services.
+We recommend to use `@Async` annotation on your service methods, that send
+emails. This will make your application faster. Average time of sending email
+is about 5-10 second.
 
 ```java
 
@@ -329,7 +130,7 @@ public class SomeService {
         mailService.send(
                 MailParameters.builder(
                                 "bob@example.com",
-                                MailType.REGISTRATION
+                                MailType.REGISTRATION.toString()
                         )
                         .property("name", "Bob")
                         .build()
@@ -337,10 +138,6 @@ public class SomeService {
     }
 }
 ```
-
-We recommend to use `@Async` annotation on your service methods, that send
-emails. This will make your application faster. Average time of sending email
-is about 5-10 second.
 
 You can also provide custom subject.
 
@@ -365,11 +162,11 @@ public class SomeService {
         mailService.send(
                 MailParameters.builder(
                                 "bob@example.com",
-                                MailType.REGISTRATION
+                                MailType.REGISTRATION.toString()
                         )
+                        .subject("Custom Subject")
                         .property("name", "Bob")
-                        .build(),
-                "Custom subject"
+                        .build()
         );
     }
 }
@@ -377,7 +174,12 @@ public class SomeService {
 
 ### Send email to many people
 
-When you define your `MailService` bean, you can use it in your services.
+In this case service will iterate over all provided emails and send email to
+each of them. It is convenient to send same emails to many people.
+
+We recommend to use `@Async` annotation on your service methods, that send
+emails. This will make your application faster. Average time of sending email
+is about 5-10 second.
 
 ```java
 
@@ -391,7 +193,8 @@ public class SomeService {
     private final MailService mailService;
 
     /**
-     * This method sends newsletter email to bob@example.com and alice@example.com.
+     * This method sends newsletter email to bob@example.com
+     * and alice@example.com.
      */
     @Async
     public void sendEmail() {
@@ -401,20 +204,13 @@ public class SomeService {
                                         "bob@example.com",
                                         "alice@example.com"
                                 ),
-                                MailType.NEWSLETTER
+                                MailType.NEWSLETTER.toString()
                         )
                         .build()
         );
     }
 }
 ```
-
-In this case service will iterate over all provided emails and send email to
-each of them. It is convenient to send same emails to many people.
-
-We recommend to use `@Async` annotation on your service methods, that send
-emails. This will make your application faster. Average time of sending email
-is about 5-10 second.
 
 You can also provide custom subject.
 
@@ -430,7 +226,8 @@ public class SomeService {
     private final MailService mailService;
 
     /**
-     * This method sends newsletter email to bob@example.com and alice@example.com.
+     * This method sends newsletter email to bob@example.com
+     * and alice@example.com.
      */
     @Async
     public void sendEmail() {
@@ -440,10 +237,10 @@ public class SomeService {
                                         "bob@example.com",
                                         "alice@example.com"
                                 ),
-                                MailType.NEWSLETTER
+                                MailType.NEWSLETTER.toString()
                         )
-                        .build(),
-                "Custom subject"
+                        .subject("Custom Subject")
+                        .build()
         );
     }
 }
