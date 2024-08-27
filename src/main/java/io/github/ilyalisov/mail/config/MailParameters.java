@@ -27,6 +27,11 @@ public class MailParameters {
     private String text;
 
     /**
+     * Subject of email. If set, it will override the default subject.
+     */
+    private String subject;
+
+    /**
      * Properties for populating template.
      */
     private Properties properties;
@@ -112,6 +117,19 @@ public class MailParameters {
         }
 
         /**
+         * Setter for subject.
+         *
+         * @param subject subject
+         * @return builder
+         */
+        public MailParametersBuilder subject(
+                final String subject
+        ) {
+            this.subject = subject;
+            return this;
+        }
+
+        /**
          * Actual builder.
          *
          * @return built object
@@ -121,6 +139,7 @@ public class MailParameters {
                     type,
                     receivers,
                     text,
+                    subject,
                     properties
             );
         }

@@ -41,25 +41,9 @@ public class MailServiceImpl implements MailService {
                 params,
                 template
         );
-        sendEmail(
-                params,
-                content,
-                template.isHtml(),
-                template.getDefaultSubject()
-        );
-    }
-
-    @Override
-    @SneakyThrows
-    public void send(
-            final MailParameters params,
-            final String subject
-    ) {
-        MailTemplate template = getTemplate(params);
-        String content = getContent(
-                params,
-                template
-        );
+        String subject = params.getSubject() != null
+                ? params.getSubject()
+                : template.getDefaultSubject();
         sendEmail(
                 params,
                 content,
