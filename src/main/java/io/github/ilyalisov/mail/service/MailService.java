@@ -2,7 +2,7 @@ package io.github.ilyalisov.mail.service;
 
 import io.github.ilyalisov.mail.config.MailParameters;
 
-public interface MailService<T> {
+public interface MailService {
 
     /**
      * Sends an email with subject from template.
@@ -10,7 +10,7 @@ public interface MailService<T> {
      * @param params mail params
      */
     void send(
-            MailParameters<T> params
+            MailParameters params
     );
 
     /**
@@ -20,7 +20,7 @@ public interface MailService<T> {
      * @param subject custom subject for email
      */
     void send(
-            MailParameters<T> params,
+            MailParameters params,
             String subject
     );
 
