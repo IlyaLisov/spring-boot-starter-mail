@@ -13,15 +13,4 @@ public interface MailService {
             MailParameters params
     );
 
-    /**
-     * Sends an email with custom subject.
-     *
-     * @param params  mail params
-     * @param subject custom subject for email
-     */
-    void send(
-            MailParameters params,
-            String subject
-    );
-
 }
