@@ -1,12 +1,12 @@
 package io.github.ilyalisov.mail.service;
 
-import io.github.ilyalisov.mail.config.MailConfiguration;
-import io.github.ilyalisov.mail.config.vendors.MailRuMailSender;
 import freemarker.template.Configuration;
+import io.github.ilyalisov.mail.config.MailTemplate;
+import io.github.ilyalisov.mail.vendors.MailRuMailSender;
 
 import java.util.Map;
 
-public class MailRuMailServiceImpl<T> extends MailServiceImpl<T> {
+public class MailRuMailServiceImpl extends MailServiceImpl {
 
     /**
      * Creates an object.
@@ -20,7 +20,7 @@ public class MailRuMailServiceImpl<T> extends MailServiceImpl<T> {
             final String username,
             final String password,
             final Configuration configuration,
-            final Map<T, MailConfiguration> templates
+            final Map<String, MailTemplate> templates
     ) {
         super(
                 configuration,

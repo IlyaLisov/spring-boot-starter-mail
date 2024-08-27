@@ -1,8 +1,8 @@
 package io.github.ilyalisov.mail.service;
 
-import io.github.ilyalisov.mail.config.MailParameters;
-import io.github.ilyalisov.mail.config.MailConfiguration;
 import freemarker.template.Configuration;
+import io.github.ilyalisov.mail.config.MailParameters;
+import io.github.ilyalisov.mail.config.MailTemplate;
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
@@ -14,7 +14,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @RequiredArgsConstructor
-public class MailServiceImpl<T> implements MailService<T> {
+public class MailServiceImpl implements MailService {
 
     /**
      * Freemarker configuration.
@@ -29,37 +29,21 @@ public class MailServiceImpl<T> implements MailService<T> {
     /**
      * Map of templates.
      */
-    private final Map<T, MailConfiguration> templates;
+    private final Map<String, MailTemplate> templates;
 
     @Override
     @SneakyThrows
     public void send(
-            final MailParameters<T> params
+            final MailParameters params
     ) {
-        MailConfiguration template = getTemplate(params);
+        MailTemplate template = getTemplate(params);
         String content = getContent(
                 params,
                 template
         );
-        sendEmail(
-                params,
-                content,
-                template.isHtml(),
-                template.getSubject()
-        );
-    }
-
-    @Override
-    @SneakyThrows
-    public void send(
-            final MailParameters<T> params,
-            final String subject
-    ) {
-        MailConfiguration template = getTemplate(params);
-        String content = getContent(
-                params,
-                template
-        );
+        String subject = params.getSubject() != null
+                ? params.getSubject()
+                : template.getDefaultSubject();
         sendEmail(
                 params,
                 content,
@@ -68,10 +52,10 @@ public class MailServiceImpl<T> implements MailService<T> {
         );
     }
 
-    private MailConfiguration getTemplate(
-            final MailParameters<T> params
+    private MailTemplate getTemplate(
+            final MailParameters params
     ) {
-        MailConfiguration template = templates.get(params.getType());
+        MailTemplate template = templates.get(params.getType());
         if (template == null) {
             throw new IllegalStateException(
                     "No template found for type: " + params.getType()
@@ -86,8 +70,8 @@ public class MailServiceImpl<T> implements MailService<T> {
     }
 
     private String getContent(
-            final MailParameters<T> params,
-            final MailConfiguration template
+            final MailParameters params,
+            final MailTemplate template
     ) {
         String content;
         if (template.isHtml()) {
@@ -102,7 +86,7 @@ public class MailServiceImpl<T> implements MailService<T> {
     }
 
     private void sendEmail(
-            final MailParameters<T> params,
+            final MailParameters params,
             final String content,
             final boolean isHtml,
             final String subject
@@ -128,8 +112,8 @@ public class MailServiceImpl<T> implements MailService<T> {
 
     @SneakyThrows
     private String processTemplate(
-            final MailParameters<T> params,
-            final MailConfiguration template
+            final MailParameters params,
+            final MailTemplate template
     ) {
         StringWriter stringWriter = new StringWriter();
         Map<String, Object> model = new HashMap<>();
@@ -140,7 +124,14 @@ public class MailServiceImpl<T> implements MailService<T> {
                     String.valueOf(entry.getValue())
             );
         }
-        configuration.getTemplate(template.getTemplateFileName())
+        for (Map.Entry<Object, Object> entry : template.getProperties()
+                .entrySet()) {
+            model.put(
+                    String.valueOf(entry.getKey()),
+                    String.valueOf(entry.getValue())
+            );
+        }
+        configuration.getTemplate(template.getTemplate())
                 .process(model, stringWriter);
         return stringWriter.getBuffer()
                 .toString();

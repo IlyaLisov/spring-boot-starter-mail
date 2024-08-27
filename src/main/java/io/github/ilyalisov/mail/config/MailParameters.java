@@ -9,12 +9,12 @@ import java.util.Properties;
 
 @Builder(access = AccessLevel.PRIVATE)
 @Getter
-public class MailParameters<T> {
+public class MailParameters {
 
     /**
      * Type of email. It is used to determine the template of the email.
      */
-    private T type;
+    private String type;
 
     /**
      * List of email receivers.
@@ -27,6 +27,11 @@ public class MailParameters<T> {
     private String text;
 
     /**
+     * Subject of email. If set, it will override the default subject.
+     */
+    private String subject;
+
+    /**
      * Properties for populating template.
      */
     private Properties properties;
@@ -36,14 +41,13 @@ public class MailParameters<T> {
      *
      * @param receiver email of receiver
      * @param type     type of email
-     * @param <T>      type of email
      * @return builder
      */
-    public static <T> MailParametersBuilder<T> builder(
+    public static MailParametersBuilder builder(
             final String receiver,
-            final T type
+            final String type
     ) {
-        return new MailParametersBuilder<T>()
+        return new MailParametersBuilder()
                 .properties(new Properties())
                 .type(type)
                 .receivers(List.of(receiver));
@@ -54,20 +58,19 @@ public class MailParameters<T> {
      *
      * @param receivers emails of receivers
      * @param type      type of email
-     * @param <T>       type of email
      * @return builder
      */
-    public static <T> MailParametersBuilder<T> builder(
+    public static MailParametersBuilder builder(
             final List<String> receivers,
-            final T type
+            final String type
     ) {
-        return new MailParametersBuilder<T>()
+        return new MailParametersBuilder()
                 .properties(new Properties())
                 .type(type)
                 .receivers(receivers);
     }
 
-    public static class MailParametersBuilder<T> {
+    public static class MailParametersBuilder {
 
         /**
          * Setter for property.
@@ -76,7 +79,7 @@ public class MailParameters<T> {
          * @param value value
          * @return builder
          */
-        public MailParametersBuilder<T> property(
+        public MailParametersBuilder property(
                 final String key,
                 final String value
         ) {
@@ -90,7 +93,7 @@ public class MailParameters<T> {
          * @param properties properties
          * @return builder
          */
-        public MailParametersBuilder<T> properties(
+        public MailParametersBuilder properties(
                 final Properties properties
         ) {
             if (this.properties == null) {
@@ -106,10 +109,23 @@ public class MailParameters<T> {
          * @param text text
          * @return builder
          */
-        public MailParametersBuilder<T> text(
+        public MailParametersBuilder text(
                 final String text
         ) {
             this.text = text;
+            return this;
+        }
+
+        /**
+         * Setter for subject.
+         *
+         * @param subject subject
+         * @return builder
+         */
+        public MailParametersBuilder subject(
+                final String subject
+        ) {
+            this.subject = subject;
             return this;
         }
 
@@ -118,11 +134,12 @@ public class MailParameters<T> {
          *
          * @return built object
          */
-        public MailParameters<T> build() {
-            return new MailParameters<>(
+        public MailParameters build() {
+            return new MailParameters(
                     type,
                     receivers,
                     text,
+                    subject,
                     properties
             );
         }
