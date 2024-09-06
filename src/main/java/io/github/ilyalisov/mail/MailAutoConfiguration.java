@@ -7,6 +7,7 @@ import io.github.ilyalisov.mail.service.MailRuMailServiceImpl;
 import io.github.ilyalisov.mail.service.MailService;
 import io.github.ilyalisov.mail.service.MailServiceImpl;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -21,6 +22,7 @@ import java.util.Properties;
 @Configuration
 @RequiredArgsConstructor
 @EnableConfigurationProperties(MailServiceProperties.class)
+@Slf4j
 public class MailAutoConfiguration {
 
     /**
@@ -45,19 +47,27 @@ public class MailAutoConfiguration {
             templates.put(template.getType(), template);
         }
         return switch (mailProperties.getVendor().toLowerCase()) {
-            case "gmail.com" -> new GoogleMailServiceImpl(
-                    mailProperties.getUsername(),
-                    mailProperties.getPassword(),
-                    freemarkerConfiguration,
-                    templates
-            );
-            case "mail.ru" -> new MailRuMailServiceImpl(
-                    mailProperties.getUsername(),
-                    mailProperties.getPassword(),
-                    freemarkerConfiguration,
-                    templates
-            );
+            case "gmail.com" -> {
+                log.info("Using Gmail.com mail sender.");
+                yield new GoogleMailServiceImpl(
+                        mailProperties.getUsername(),
+                        mailProperties.getPassword(),
+                        freemarkerConfiguration,
+                        templates
+                );
+            }
+            case "mail.ru" -> {
+                log.info("Using Mail.ru mail sender.");
+                yield new MailRuMailServiceImpl(
+                        mailProperties.getUsername(),
+                        mailProperties.getPassword(),
+                        freemarkerConfiguration,
+                        templates
+                );
+            }
             default -> {
+                log.warn("Mail vendor is not specified. "
+                        + "Using default mail sender.");
                 JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
                 mailSender.setHost(mailProperties.getHost());
                 mailSender.setPort(mailProperties.getPort());

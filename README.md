@@ -30,7 +30,7 @@ With Maven add dependency to your `pom.xml`.
 <dependency>
     <groupId>io.github.ilyalisov</groupId>
     <artifactId>spring-boot-starter-mail</artifactId>
-    <version>0.2.0</version>
+    <version>0.2.1</version>
 </dependency>
 ```
 
@@ -106,9 +106,8 @@ store them in memory. You can use `MailService` bean in your services.
 
 ### Send email
 
-We recommend to use `@Async` annotation on your service methods, that send
-emails. This will make your application faster. Average time of sending email
-is about 5-10 second.
+`MailService` is using `@Async` annotation to send emails. This will make your
+application faster. Average time of sending email is about 5-10 second.
 
 ```java
 
@@ -125,7 +124,6 @@ public class SomeService {
      * This method sends registration email to example@example.com.
      * Service will use provided name Bob and email template defined before.
      */
-    @Async
     public void sendEmail() {
         mailService.send(
                 MailParameters.builder(
@@ -157,7 +155,6 @@ public class SomeService {
      * Custom Subject.
      * Service will use provided name Bob and email template defined before.
      */
-    @Async
     public void sendEmail() {
         mailService.send(
                 MailParameters.builder(
@@ -177,10 +174,6 @@ public class SomeService {
 In this case service will iterate over all provided emails and send email to
 each of them. It is convenient to send same emails to many people.
 
-We recommend to use `@Async` annotation on your service methods, that send
-emails. This will make your application faster. Average time of sending email
-is about 5-10 second.
-
 ```java
 
 @Service
@@ -196,7 +189,6 @@ public class SomeService {
      * This method sends newsletter email to bob@example.com
      * and alice@example.com.
      */
-    @Async
     public void sendEmail() {
         mailService.send(
                 MailParameters.builder(
@@ -229,7 +221,6 @@ public class SomeService {
      * This method sends newsletter email to bob@example.com
      * and alice@example.com.
      */
-    @Async
     public void sendEmail() {
         mailService.send(
                 MailParameters.builder(
