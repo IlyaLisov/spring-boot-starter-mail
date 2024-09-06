@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.scheduling.annotation.Async;
 
 import java.io.StringWriter;
 import java.util.HashMap;
@@ -31,6 +32,7 @@ public class MailServiceImpl implements MailService {
      */
     private final Map<String, MailTemplate> templates;
 
+    @Async
     @Override
     @SneakyThrows
     public void send(
