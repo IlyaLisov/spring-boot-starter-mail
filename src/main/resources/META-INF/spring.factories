@@ -1,2 +1,5 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
   io.github.ilyalisov.mail.MailAutoConfiguration
+
+org.springframework.boot.autoconfigure.condition.ConditionalOnClass=\
+  org.springframework.mail.javamail.JavaMailSenderImpl

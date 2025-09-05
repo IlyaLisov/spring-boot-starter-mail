@@ -9,10 +9,12 @@ import io.github.ilyalisov.mail.service.MailServiceImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 
 import java.util.HashMap;
@@ -38,8 +40,10 @@ public class MailAutoConfiguration {
      * @return mail service
      */
     @Bean
+    @Primary
     @ConditionalOnMissingBean
     public MailService mailService(
+            @Qualifier("mailServiceProperties")
             final MailServiceProperties mailProperties
     ) {
         Map<String, MailTemplate> templates = new HashMap<>();
