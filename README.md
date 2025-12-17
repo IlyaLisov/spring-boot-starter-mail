@@ -30,7 +30,7 @@ With Maven add dependency to your `pom.xml`.
 <dependency>
     <groupId>io.github.ilyalisov</groupId>
     <artifactId>spring-boot-starter-mail</artifactId>
-    <version>0.2.1</version>
+    <version>0.2.2</version>
 </dependency>
 ```
 
