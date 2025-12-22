@@ -16,6 +16,7 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
@@ -43,8 +44,15 @@ public class MailAutoConfiguration {
     @Bean
     @Primary
     @ConditionalOnMissingBean
-    public MailService mailService() {
+    public MailService mailService(
+            final List<MailTemplate> templateBeans
+    ) {
         Map<String, MailTemplate> templates = new HashMap<>();
+        if (templateBeans != null) {
+            for (MailTemplate template : templateBeans) {
+                templates.put(template.getType(), template);
+            }
+        }
         if (mailProperties.getTemplates() != null) {
             for (MailTemplate template : mailProperties.getTemplates()) {
                 templates.put(template.getType(), template);
