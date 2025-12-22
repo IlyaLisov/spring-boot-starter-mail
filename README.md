@@ -1,15 +1,14 @@
 # Spring Boot Starter Mail
 
-[![Lines-of-Code](https://tokei.rs/b1/github/ilyalisov/spring-boot-starter-mail)](https://github.com/ilyalisov/spring-boot-starter-mail)
-[![Hits-of-Code](https://hitsofcode.com/github/ilyalisov/spring-boot-starter-mail?branch=master)](https://hitsofcode.com/github/ilyalisov/spring-boot-starter-mail/view?branch=master)
 [![mvn](https://github.com/ilyalisov/spring-boot-starter-mail/actions/workflows/maven-build.yml/badge.svg)](https://github.com/ilyalisov/spring-boot-starter-mail/actions/workflows/maven-build.yml)
-
 [![codecov](https://codecov.io/gh/IlyaLisov/spring-boot-starter-mail/graph/badge.svg?token=OJR6TFQ2qr)](https://codecov.io/gh/IlyaLisov/spring-boot-starter-mail)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
+[![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.3.1-brightgreen.svg)](https://spring.io/projects/spring-boot)
 
 This repository is an open-source Java library for fast and convenient using of
 MailSender in your Spring Boot applications.
 
-## Content:
+## Table of contents:
 
 * [How to use](#how-to-use)
     * [Prerequisites](#prerequisites)
@@ -17,7 +16,8 @@ MailSender in your Spring Boot applications.
     * [Send email](#send-email)
     * [Send email to many people](#send-email-to-many-people)
     * [Templates](#templates)
-* [How to contribute](#how-to-contribute)
+* [License](#license)
+* [Contribution](#contribution)
 
 ## How to use
 
@@ -103,6 +103,13 @@ just plain text.
 
 After startup, service will load all templates from `templates` directory and
 store them in memory. You can use `MailService` bean in your services.
+
+You can provide templates via `MailTemplate` beans. They will be added to
+template list from `application.yaml` at the startup.
+
+**WARNING:** Mail templates from `application.yaml` would overwrite mail
+templates from beans. This allows you to fix templates without rebuilding a
+project.
 
 ### Send email
 
@@ -326,7 +333,17 @@ This template has some variables:
   HTML tags, so you can use HTML tags in your email body
 * `buttonOpenText` - text of the button
 
-## How to contribute
+## License
 
-See active issues
-at [issues page](https://github.com/ilyalisov/spring-boot-starter-mail/issues)
+This project is licensed under the MIT License - see the [LICENSE](./LICENSE)
+file for details.
+
+## Contribution
+
+We welcome contributions! Please feel free to submit issues and enhancement
+requests.
+
+To contribute, make a fork and open a pull request. You can find
+issues [here](https://github.com/ilyalisov/spring-boot-starter-mail/issues).
+
+Make sure, you follow project's codestyle.
