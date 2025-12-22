@@ -8,8 +8,6 @@ import io.github.ilyalisov.mail.service.MailService;
 import io.github.ilyalisov.mail.service.MailServiceImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
@@ -28,48 +26,51 @@ import java.util.Properties;
 public class MailAutoConfiguration {
 
     /**
+     * MailServiceProperties for configuring MailService.
+     */
+    private final MailServiceProperties mailProperties;
+
+    /**
      * Freemarker configuration.
      */
-    @Autowired
-    private freemarker.template.Configuration freemarkerConfiguration;
+    private final freemarker.template.Configuration freemarkerConfiguration;
 
     /**
      * Creates a mail service bean.
      *
-     * @param mailProperties properties for default bean
      * @return mail service
      */
     @Bean
     @Primary
     @ConditionalOnMissingBean
-    public MailService mailService(
-            @Qualifier("mailServiceProperties")
-            final MailServiceProperties mailProperties
-    ) {
+    public MailService mailService() {
         Map<String, MailTemplate> templates = new HashMap<>();
-        for (MailTemplate template : mailProperties.getTemplates()) {
-            templates.put(template.getType(), template);
+        if (mailProperties.getTemplates() != null) {
+            for (MailTemplate template : mailProperties.getTemplates()) {
+                templates.put(template.getType(), template);
+            }
         }
-        return switch (mailProperties.getVendor().toLowerCase()) {
-            case "gmail.com" -> {
+        String vendor = mailProperties.getVendor() != null
+                ? mailProperties.getVendor().toLowerCase()
+                : "";
+        switch (vendor) {
+            case "gmail.com":
                 log.info("Using Gmail.com mail sender.");
-                yield new GoogleMailServiceImpl(
+                return new GoogleMailServiceImpl(
                         mailProperties.getUsername(),
                         mailProperties.getPassword(),
                         freemarkerConfiguration,
                         templates
                 );
-            }
-            case "mail.ru" -> {
+            case "mail.ru":
                 log.info("Using Mail.ru mail sender.");
-                yield new MailRuMailServiceImpl(
+                return new MailRuMailServiceImpl(
                         mailProperties.getUsername(),
                         mailProperties.getPassword(),
                         freemarkerConfiguration,
                         templates
                 );
-            }
-            default -> {
+            default:
                 log.warn("Mail vendor is not specified. "
                         + "Using default mail sender.");
                 JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
@@ -80,12 +81,12 @@ public class MailAutoConfiguration {
                 Properties properties = new Properties();
                 properties.putAll(mailProperties.getProperties());
                 mailSender.setJavaMailProperties(properties);
-                yield new MailServiceImpl(
+                return new MailServiceImpl(
                         freemarkerConfiguration,
                         mailSender,
                         templates
                 );
-            }
-        };
+        }
     }
+
 }
