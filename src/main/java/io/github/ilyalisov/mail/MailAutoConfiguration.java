@@ -39,6 +39,7 @@ public class MailAutoConfiguration {
     /**
      * Creates a mail service bean.
      *
+     * @param templateBeans set of beans of MailTemplate
      * @return mail service
      */
     @Bean
